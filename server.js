@@ -43,6 +43,37 @@ function startServer(){
 
     })
 
+    app.put('/api/produtos/:id', (req,res)=>{
+        const id = parseInt(req.params.id, 10);
+        const produto = produtos.find(p=> p.id ===id);
+        if(isNaN(id)){
+            return res.status(400).json({ mensagem: 'O ID fornecido não é um número valido'});
+        }
+        if (!produto){
+            return res.status(404).json({mensagem:'produto não encotrado'});
+        }
+        const novoNome = req.body.nome;
+        if (!novoNome || novoNome.trim() === ''){
+            return res.status(400).json({mensagem:'O campo "nome" é obrigatório e não pode ser vazio'});
+        }
+        produto.nome =novoNome;
+        res.json(produto);
+    });
+
+    app.delete('api/delete/:id', (req,res)=>{
+        const id = parseInt(req, params.id);
+        if(isNaN(id)){
+            return res.status(400).json({ mensagem: 'O ID fornecido não é um número valido'});
+        }
+        const tamanhoOriginal = produtos.length;
+        produtos = produtos.filter(p => p.id !==id);
+        if(tamanhoOriginal === produtos.lenght)
+        {
+            return res.status(404).json({mensagem: 'Produto não encontrado'})
+        }
+        res.status(204).send();
+    })
+
     //INICIA A LINDA PORTA(NO CASO A PORTA 1533)
     app.listen(1533, () => {
         console.log('Servidor rodando ')
